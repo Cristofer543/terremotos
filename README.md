@@ -1,0 +1,2 @@
+# terremotos
+Detector de terremotos
