@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detector de Terremotos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Detector de Terremotos</h1>
+        <p>Visualiza los terremotos del día actual</p>
+    </header>
+    <main>
+        <div id="earthquake-container"></div>
+    </main>
+    <script>
+        async function fetchEarthquakes() {
+            const response = await fetch('/earthquakes');
+            const data = await response.json();
+            const container = document.getElementById('earthquake-container');
+            container.innerHTML = '';
+
+            data.forEach(eq => {
+                const earthquakeDiv = document.createElement('div');
+                earthquakeDiv.classList.add('earthquake-box');
+
+                const time = new Date(eq.properties.time).toLocaleString();
+                const mag = eq.properties.mag;
+                const location = eq.properties.place;
+
+                earthquakeDiv.innerHTML = `
+                    <h3>Magnitud: ${mag}</h3>
+                    <p>Ubicación: ${location}</p>
+                    <p>Hora: ${time}</p>
+                `;
+                container.appendChild(earthquakeDiv);
+            });
+        }
+
+        // Llama a la función al cargar la página
+        window.onload = () => {
+            fetchEarthquakes();
+            // Actualiza cada 60 segundos (60000 ms)
+            setInterval(fetchEarthquakes, 60000);
+        };
+    </script>
+</body>
+</html>
